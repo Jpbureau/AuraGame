@@ -39,10 +39,12 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 
 	void Move(const FInputActionValue& InputActionValue);
+	void AutoRun();
 
 	void CursorTrace();
 	IEnemyInterface* LastActor;
 	IEnemyInterface* ThisActor;
+	FHitResult CursorHit;
 	
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
@@ -58,7 +60,7 @@ private:
 
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
-	float ShortPressedThreshold = 0.f;
+	float ShortPressedThreshold = 0.5f;
 	bool bAutoRunning = false;
 	bool bTargeting = false;
 
