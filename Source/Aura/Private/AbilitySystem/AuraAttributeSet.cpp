@@ -87,7 +87,10 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	FEffectPropertiesEnhanced Props;
 	SetEffectProperties(Data, Props);
 
-	
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Changed Health on %s, Health: %f"), *Props.TargetProperties->AvatarActor->GetName(), GetHealth())
+	}
 }
 
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data,	FEffectPropertiesEnhanced& Props)
@@ -102,7 +105,7 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		Props.SourceProperties->Controller = SourceASC->AbilityActorInfo->PlayerController.Get();
 		if (Props.SourceProperties->Controller == nullptr && Props.SourceProperties->AvatarActor != nullptr)
 		{
-			if (const APawn* Pawn = Cast<APawn>(Props.SourceProperties->Controller->GetPawn()))
+			if (const APawn* Pawn = Cast<APawn>(Props.SourceProperties->AvatarActor))
 			{
 				Props.SourceProperties->Controller = Pawn->GetController();
 			}
@@ -117,7 +120,7 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
 		Props.TargetProperties->AvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
-		Props.TargetProperties->Controller = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetProperties->Controller = Cast<APawn>(Props.TargetProperties->AvatarActor)->GetController();
 		Props.TargetProperties->Character = Cast<ACharacter>(Props.TargetProperties->AvatarActor);
 		Props.TargetProperties->AbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetProperties->AvatarActor);
 	}
