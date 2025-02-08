@@ -74,6 +74,8 @@ void AAuraPlayerController::SetupInputComponent()
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::EnableAutoAttack);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::DisableAutoAttack);
 
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
@@ -119,16 +121,16 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 	{
 		if (GetASC())
 		{
-			GetASC()->AbilityInputTagHeld(InputTag);
+			GetASC()->AbilityInputTagReleased(InputTag);
 		}
 		return;
 	}
 
-	if (bTargeting && GetASC())
+	if (GetASC())
 	{
-		GetASC()->AbilityInputTagHeld(InputTag);
+		GetASC()->AbilityInputTagReleased(InputTag);
 	}
-	else
+	if (!bTargeting && !bCanAutoAttack)
 	{
 		if (const APawn* ControlledPawn = GetPawn<APawn>(); FollowTime <= ShortPressedThreshold && ControlledPawn)
 		{
@@ -156,7 +158,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting && GetASC())
+	if ((bTargeting || bCanAutoAttack) && GetASC())
 	{
 		GetASC()->AbilityInputTagHeld(InputTag);
 	}

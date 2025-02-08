@@ -38,6 +38,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+
+	// Auto attack meaning that the player attacks while standing still instead of moving
+	void EnableAutoAttack() { bCanAutoAttack = true; }
+	void DisableAutoAttack() { bCanAutoAttack = false; }
+	bool bCanAutoAttack = false;
+
 	void Move(const FInputActionValue& InputActionValue);
 	void AutoRun();
 
