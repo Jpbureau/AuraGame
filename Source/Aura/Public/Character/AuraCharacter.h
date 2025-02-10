@@ -23,6 +23,17 @@ public:
 	/** Combat Interface */
 	virtual int32 GetPawnLevel() override;
 	/** End Combat Interface */
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	void InitializeDefaultAttributes() const;
 	
 private:
 	virtual void InitAbilityActorInfo() override;
