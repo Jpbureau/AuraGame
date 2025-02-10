@@ -75,7 +75,6 @@ void AAuraProjectile::PlayEffects() const
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), GetActorRotation());
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 	TrailSoundComponent->Stop();
-
 }
 
 
