@@ -26,7 +26,10 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; };
 
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
-	
+	virtual void Die();
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
 protected:
 	virtual void BeginPlay() override;
 
@@ -49,6 +52,24 @@ protected:
 	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level = 1.f) const;
 
 	void AddCharacterAbilities() const;
+
+	/**
+	 * Dissolve Effects
+	 */
+	
+	void Dissolve();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInterface> DissolveMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInterface> WeaponDissolveMaterialInstance;
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Abilities")
