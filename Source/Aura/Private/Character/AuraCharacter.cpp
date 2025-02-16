@@ -35,6 +35,10 @@ void AAuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
+	// Fixes issue where skills (such as fire bolt) is not firing on the server as notify event is not being received.
+	// Enabling auto-flush ensures that network packets are immediately sent to the recipient without additional delay
+	if (UNetConnection* Connection = GetNetConnection()) Connection->SetAutoFlush(true);
+	
 	//Init ability actor info for the Client
 	InitAbilityActorInfo();
 }
