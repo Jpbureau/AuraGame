@@ -65,6 +65,9 @@ void UAuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 	
 	const FGameplayEffectSpecHandle EffectSpecSecondaryAttributes = ASC->MakeOutgoingSpec(ClassDefaultInfo.SecondaryAttributes, Level, ContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecSecondaryAttributes.Data);
+
+	const FGameplayEffectSpecHandle EffectSpecResistanceAttributes = ASC->MakeOutgoingSpec(ClassDefaultInfo.ResistanceAttributes, Level, ContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecResistanceAttributes.Data);
 	
 	const FGameplayEffectSpecHandle EffectSpecVitalAttributes = ASC->MakeOutgoingSpec(ClassDefaultInfo.VitalAttributes, Level, ContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecVitalAttributes.Data);

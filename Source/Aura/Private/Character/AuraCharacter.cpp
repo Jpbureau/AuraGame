@@ -51,6 +51,7 @@ void AAuraCharacter::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultPrimaryAttributes);
 	ApplyEffectToSelf(DefaultSecondaryAttributes);
 	ApplyEffectToSelf(DefaultVitalAttributes);
+	ApplyEffectToSelf(DefaultResistanceAttributes);
 }
 
 void AAuraCharacter::InitAbilityActorInfo()

@@ -29,6 +29,9 @@ struct FCharacterClassDefaultInfo
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 
 	UPROPERTY(EditDefaultsOnly, Category="Class Defaults")
+	TSubclassOf<UGameplayEffect> ResistanceAttributes;
+
+	UPROPERTY(EditDefaultsOnly, Category="Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 };
 
