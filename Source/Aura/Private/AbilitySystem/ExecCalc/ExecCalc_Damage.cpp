@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAbilityTypes.h"
 #include "AuraGameplayTags.h"
+#include "GameplayTagsManager.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
@@ -70,7 +71,14 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluateParams.TargetTags = TargetTags;
 
 	// Get Damage Set By Caller Magnitude
-	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
+	float Damage = 0.0f;
+	//Get Damage from all damage types
+	FGameplayTagContainer AllDamageTags = UGameplayTagsManager::Get().RequestGameplayTagChildren(FAuraGameplayTags::Get().Damage);
+	for(const auto& Tag : AllDamageTags)
+	{
+		//Get damage set by caller magnitude
+		Damage += Spec.GetSetByCallerMagnitude(Tag);
+	}
 	
 	// Capture BlockChange on Target, and determine if there was a successful block
 

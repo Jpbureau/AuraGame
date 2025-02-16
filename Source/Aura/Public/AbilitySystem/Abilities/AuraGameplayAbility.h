@@ -18,8 +18,4 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartingInputTag;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Power")
-	FScalableFloat AbilityPower;
-	
 };
