@@ -5,6 +5,20 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 
+#define DECLARE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(T)\
+FGameplayTag Damage_##T; \
+FGameplayTag Attributes_Resistance_##T; \
+ 
+#define INITIALIZE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(T)\
+{\
+	FString TagDamage = "Damage."#T; \
+	FString TagResistance = "Attributes.Resistance."#T; \
+	GameplayTags.Damage_##T = UGameplayTagsManager::Get().AddNativeGameplayTag(*TagDamage, TagDamage); \
+	GameplayTags.Attributes_Resistance_##T = UGameplayTagsManager::Get().AddNativeGameplayTag(*TagResistance, TagResistance); \
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_##T, GameplayTags.Attributes_Resistance_##T); \
+	\
+};
+
 /**
  * AuraGameplayTags
  *
@@ -43,7 +57,14 @@ public:
 	FGameplayTag InputTag_4;
 
 	FGameplayTag Damage;
-	FGameplayTag Damage_Fire;
+
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	
+	DECLARE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Fire);
+	DECLARE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Ice);
+	DECLARE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Lightning);
+	DECLARE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Arcane);
+	DECLARE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Physical);
 
 	FGameplayTag Effects_HitReact;
 private:

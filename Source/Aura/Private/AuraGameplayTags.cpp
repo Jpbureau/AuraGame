@@ -104,7 +104,11 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.4"), FString("Input Tag for 4 key"));
 
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));
-	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"), FString("Fire Damage Type"));
+	INITIALIZE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Fire)
+	INITIALIZE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Ice)
+	INITIALIZE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Lightning)
+	INITIALIZE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Arcane)
+	INITIALIZE_DAMAGE_AND_RESISTANCE_TYPE_TAGS(Physical)
 
 	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), FString("Tag granted when Hit Reacting"));
 }
