@@ -103,6 +103,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParams.SourceTags = SourceTags;
 	EvaluationParams.TargetTags = TargetTags;
 
+	// TODO: Maybe split this in multiple ExecCalc to simplify the classes
 	// Get Damage Set By Caller Magnitude
 	float Damage = 0.0f;
 	//Get Damage from all damage types

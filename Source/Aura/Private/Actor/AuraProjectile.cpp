@@ -53,7 +53,17 @@ void AAuraProjectile::Destroyed()
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	PlayEffects();
+	if (DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data->GetContext().GetEffectCauser() == OtherActor)
+	{
+		return;
+	}
+
+	// To prevent triggering the sound multiple times
+	if (!bHit)
+	{
+		PlayEffects();
+	}
+	
 	
 	if (HasAuthority())
 	{
@@ -74,7 +84,10 @@ void AAuraProjectile::PlayEffects() const
 {
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), GetActorRotation());
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	TrailSoundComponent->Stop();
+	if (TrailSoundComponent)
+	{
+		TrailSoundComponent->Stop();
+	}
 }
 
 
