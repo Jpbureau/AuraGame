@@ -69,7 +69,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TArray<FGameplayEffects> InfiniteGameplayEffects;
 
-	TMap<uint32, FActiveGameplayEffectHandle> ActiveEffectHandles;
+	TMap<FString, FActiveGameplayEffectHandle> ActiveEffectHandles;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	float ActorLevel = 1.0f;
@@ -77,4 +77,5 @@ protected:
 private:
 	void TryApplyAllGameplayEffectsOnTarget(AActor* Target, TArray<FGameplayEffects> GameplayEffects, EEffectApplicationPolicy TargetPolicy);
 	void TryRemoveAllInfiniteGameplayEffectsOnTarget(AActor* TargetActor);
+	FString GetUniqueID(const AActor* TargetActor, const FGameplayEffects& GameplayEffectClass);
 };

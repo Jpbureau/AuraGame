@@ -30,7 +30,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* Target, FGameplayEffects Game
 
 	if (EffectSpec.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite && GameplayEffect.EffectRemovalPolicy == EEffectRemovalPolicy::RemovalOnEndOverlap)
 	{
-		const int32 UID = GameplayEffect.GameplayEffectClass->GetUniqueID();
+		const FString UID = GetUniqueID(Target, GameplayEffect);
 		ActiveEffectHandles.Add(UID, ActiveEffectHandle);
 	}
 }
@@ -44,10 +44,6 @@ void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 
 void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 {
-	TryApplyAllGameplayEffectsOnTarget(TargetActor, InstantGameplayEffects, EEffectApplicationPolicy::ApplyOnEndOverlap);
-	TryApplyAllGameplayEffectsOnTarget(TargetActor, DurationGameplayEffects, EEffectApplicationPolicy::ApplyOnEndOverlap);
-	TryApplyAllGameplayEffectsOnTarget(TargetActor, InfiniteGameplayEffects, EEffectApplicationPolicy::ApplyOnEndOverlap);
-
 	TryRemoveAllInfiniteGameplayEffectsOnTarget(TargetActor);
 }
 
@@ -72,7 +68,7 @@ void AAuraEffectActor::TryRemoveAllInfiniteGameplayEffectsOnTarget(AActor* Targe
 	
 	for (const auto InfiniteGameplayEffect : InfiniteGameplayEffects)
 	{
-		const auto UID = InfiniteGameplayEffect.GameplayEffectClass->GetUniqueID();
+		const auto UID = GetUniqueID(TargetActor, InfiniteGameplayEffect);
 		if (!ActiveEffectHandles.Contains(UID)) continue;
 		
 		if (InfiniteGameplayEffect.EffectRemovalPolicy == EEffectRemovalPolicy::RemovalOnEndOverlap)
@@ -88,5 +84,12 @@ void AAuraEffectActor::TryRemoveAllInfiniteGameplayEffectsOnTarget(AActor* Targe
 		ActiveEffectHandles.Remove(UID);
 	}
 }
+
+FString AAuraEffectActor::GetUniqueID(const AActor* TargetActor, const FGameplayEffects& GameplayEffectClass)
+{
+	return FString::FromInt(TargetActor->GetUniqueID()) + FString::FromInt(GameplayEffectClass.GameplayEffectClass->GetUniqueID());
+}
+
+
 
 
