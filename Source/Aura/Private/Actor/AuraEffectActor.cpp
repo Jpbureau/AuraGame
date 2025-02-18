@@ -14,9 +14,9 @@ void AAuraEffectActor::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AAuraEffectActor::ApplyEffectToTarget(AActor* Target, FGameplayEffects GameplayEffect)
+void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, FGameplayEffects GameplayEffect)
 {
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if (TargetASC == nullptr) return;
 
 	check(GameplayEffect.GameplayEffectClass);
@@ -27,8 +27,13 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* Target, FGameplayEffects Game
 
 	if (EffectSpec.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite && GameplayEffect.EffectRemovalPolicy == EEffectRemovalPolicy::RemovalOnEndOverlap)
 	{
-		const FString UID = GetUniqueID(Target, GameplayEffect);
+		const FString UID = GetUniqueID(TargetActor, GameplayEffect);
 		ActiveEffectHandles.Add(UID, ActiveEffectHandle);
+	}
+
+	if (GameplayEffect.EffectRemovalPolicy == EEffectRemovalPolicy::RemovalOnStartOverlap)
+	{
+		Destroy();
 	}
 }
 
@@ -44,23 +49,27 @@ void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 	TryRemoveAllInfiniteGameplayEffectsOnTarget(TargetActor);
 }
 
-void AAuraEffectActor::TryApplyAllGameplayEffectsOnTarget(AActor* Target, TArray<FGameplayEffects> GameplayEffects, EEffectApplicationPolicy TargetPolicy)
+void AAuraEffectActor::TryApplyAllGameplayEffectsOnTarget(AActor* TargetActor, TArray<FGameplayEffects> GameplayEffects, EEffectApplicationPolicy TargetPolicy)
 {
 	checkf(TargetPolicy != EEffectApplicationPolicy::DoNotApply, TEXT("ApplyAllGameplayEffectsOnTarget can't be set on DoNotApply"))
 
+	if (TargetActor->ActorHasTag("Enemy") && !bApplyEffectsToEnemies) return;
+	
 	if (GameplayEffects.Num() == 0) return;
 	
 	for (const auto GameplayEffect : GameplayEffects)
 	{
 		if (GameplayEffect.EffectApplicationPolicy == TargetPolicy)
 		{
-			ApplyEffectToTarget(Target, GameplayEffect);
+			ApplyEffectToTarget(TargetActor, GameplayEffect);
 		}
 	}
 }
 
 void AAuraEffectActor::TryRemoveAllInfiniteGameplayEffectsOnTarget(AActor* TargetActor)
 {
+	if (TargetActor->ActorHasTag("Enemy") && !bApplyEffectsToEnemies) return;
+	
 	if (InfiniteGameplayEffects.Num() == 0) return;
 	
 	for (const auto InfiniteGameplayEffect : InfiniteGameplayEffects)

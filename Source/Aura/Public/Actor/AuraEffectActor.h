@@ -22,6 +22,7 @@ enum class EEffectApplicationPolicy : uint8
 UENUM(BlueprintType)
 enum class EEffectRemovalPolicy : uint8
 {
+	RemovalOnStartOverlap,
 	RemovalOnEndOverlap,
 	DoNotRemove,
 };
@@ -52,7 +53,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-	void ApplyEffectToTarget(AActor* Target, FGameplayEffects GameplayEffectClass);
+	void ApplyEffectToTarget(AActor* TargetActor, FGameplayEffects GameplayEffectClass);
 
 	UFUNCTION(BlueprintCallable)
 	void OnOverlap(AActor* TargetActor);
@@ -69,13 +70,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TArray<FGameplayEffects> InfiniteGameplayEffects;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	bool bDestroyOnApplyEffectApplication = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	bool bApplyEffectsToEnemies = false;
+
 	TMap<FString, FActiveGameplayEffectHandle> ActiveEffectHandles;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	float ActorLevel = 1.0f;
 
 private:
-	void TryApplyAllGameplayEffectsOnTarget(AActor* Target, TArray<FGameplayEffects> GameplayEffects, EEffectApplicationPolicy TargetPolicy);
+	void TryApplyAllGameplayEffectsOnTarget(AActor* TargetActor, TArray<FGameplayEffects> GameplayEffects, EEffectApplicationPolicy TargetPolicy);
 	void TryRemoveAllInfiniteGameplayEffectsOnTarget(AActor* TargetActor);
 	FString GetUniqueID(const AActor* TargetActor, const FGameplayEffects& GameplayEffectClass);
 };
